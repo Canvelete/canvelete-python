@@ -14,6 +14,7 @@ class RenderResource:
         design_id: Optional[str] = None,
         template_id: Optional[str] = None,
         dynamic_data: Optional[Dict[str, Any]] = None,
+        dynamic_elements: Optional[Dict[str, Any]] = None,
         format: str = "png",
         width: Optional[int] = None,
         height: Optional[int] = None,
@@ -22,11 +23,13 @@ class RenderResource:
     ) -> bytes:
         """
         Render a design or template to an image/PDF.
+        Uses the backend API directly at /api/v1/render.
         
         Args:
             design_id: Design ID to render
             template_id: Template ID to render (alternative to design_id)
-            dynamic_data: Dynamic data to inject into template
+            dynamic_data: Dynamic data to inject into template (by element name)
+            dynamic_elements: Dynamic element overrides (by element id or name)
             format: Output format (png, jpg, jpeg, pdf)
             width: Output width (defaults to design width)
             height: Output height (defaults to design height)
@@ -52,8 +55,11 @@ class RenderResource:
             payload["designId"] = design_id
         if template_id:
             payload["templateId"] = template_id
+        # Support both dynamicData and dynamicElements for flexibility
         if dynamic_data:
             payload["dynamicData"] = dynamic_data
+        if dynamic_elements:
+            payload["dynamicElements"] = dynamic_elements
         if width:
             payload["width"] = width
         if height:
@@ -61,7 +67,7 @@ class RenderResource:
         
         response = self.client.request(
             "POST",
-            "/api/automation/render",
+            "/api/v1/render",
             json_data=payload,
         )
         
@@ -94,7 +100,7 @@ class RenderResource:
         
         response = self.client.request(
             "GET",
-            "/api/automation/render",
+            "/api/v1/render/history",
             params=params,
         )
         

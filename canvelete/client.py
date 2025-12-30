@@ -52,7 +52,7 @@ class CanveleteClient:
         api_key: Optional[str] = None,
         client_id: Optional[str] = None,
         client_secret: Optional[str] = None,
-        base_url: str = "https://www.canvelete.com",
+        base_url: str = "https://api.canvelete.com",
         timeout: int = 30,
         max_retries: int = 3,
     ):
